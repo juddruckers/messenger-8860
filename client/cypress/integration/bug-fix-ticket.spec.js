@@ -11,11 +11,19 @@ const bob = {
   password: "L%e$xZHC4QKP@F",
 };
 
+const tom = {
+  username: "Tom",
+  email: "tom@example.com",
+  password: "fLTarZ9U$xZHC4",
+};
+
 describe("Bug Fix: Sending Messages", () => {
   it("setup", () => {
     cy.signup(alice.username, alice.email, alice.password);
     cy.logout();
     cy.signup(bob.username, bob.email, bob.password);
+    cy.logout();
+    cy.signup(tom.username, tom.email, tom.password);
     cy.logout();
   });
 
@@ -66,5 +74,17 @@ describe("Bug Fix: Sending Messages", () => {
     cy.contains("Fourth message");
     cy.contains("Fifth message");
     cy.contains("Sixth message");
+  });
+
+  it("displays conversations in correct order", () => {
+    cy.login(alice.username, alice.password);
+
+    cy.get("input[name=search]").type("Tom");
+    cy.contains("Tom").click();
+
+    cy.get("input[name=text]").type("Seventh message{enter}");
+    cy.get("input[name=search]").clear();
+    //verify the top conversation by finding the immediate sibling of the search form
+    cy.get("form[name=conversationSearchForm]").next().should("contain", "Tom");
   });
 });

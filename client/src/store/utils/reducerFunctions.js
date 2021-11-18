@@ -11,17 +11,21 @@ export const addMessageToStore = (state, payload) => {
     return [newConvo, ...state];
   }
 
-  return state.map((convo) => {
-    if (convo.id === message.conversationId) {
-      return {
-        ...convo,
-        latestMessageText: message.text,
-        messages: convo.messages.concat(message),
-      }
-    } else {
-      return convo;
-    }
-  });
+  const newState = state.filter((convo) => convo.id !== message.conversationId);
+
+  const convoIndex = state.findIndex(
+    (convo) => convo.id === message.conversationId,
+  );
+
+  const convoCopy = {
+    ...state[convoIndex],
+  };
+
+  convoCopy.latestMessageText = message.text;
+  convoCopy.messages = convoCopy.messages.concat(message);
+  newState.unshift(convoCopy);
+
+  return newState;
 };
 
 export const addOnlineUserToStore = (state, id) => {
@@ -69,16 +73,20 @@ export const addSearchedUsersToStore = (state, users) => {
 };
 
 export const addNewConvoToStore = (state, recipientId, message) => {
-  return state.map((convo) => {
-    if (convo.otherUser.id === recipientId) {
-      return {
-        ...convo,
-        id: message.conversationId,
-        messages : convo.messages.concat(message),
-        latestMessageText: message.text
-      }
-    } else {
-      return convo;
-    }
-  });
+  const newState = state.filter((convo) => convo.otherUser.id !== recipientId);
+
+  const convoIndex = state.findIndex(
+    (convo) => convo.otherUser.id === recipientId,
+  );
+
+  const convoCopy = {
+    ...state[convoIndex],
+  };
+
+  convoCopy.id = message.conversationId;
+  convoCopy.messages = convoCopy.messages.concat(message);
+  convoCopy.latestMessageText = message.text;
+  newState.unshift(convoCopy);
+
+  return newState;
 };
