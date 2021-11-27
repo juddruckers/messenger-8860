@@ -89,3 +89,18 @@ export const addNewConvoToStore = (state, recipientId, message) => {
     return newState;
   }, []);
 };
+
+export const resetUnreadMessageCount = (state, conversationId) => {
+  console.log("reducer function running captain");
+  console.log("conversation id captain", conversationId);
+  //get the length of the messages
+  return state.map((convo) => {
+    if (convo.id === conversationId) {
+      const convoCopy = { ...convo };
+      console.log("convo found captain", convoCopy);
+      convoCopy.unreadMessages = 0;
+      return convoCopy;
+    }
+    return convo;
+  });
+};

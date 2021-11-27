@@ -1,14 +1,14 @@
-import React from "react";
+import React, { useEffect, useMemo } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import { Box } from "@material-ui/core";
 import { Input, Header, Messages } from "./index";
 import { connect } from "react-redux";
-
+import { updateMessages } from "../../store/utils/thunkCreators";
 const useStyles = makeStyles(() => ({
   root: {
     display: "flex",
     flexGrow: 8,
-    flexDirection: "column"
+    flexDirection: "column",
   },
   chatContainer: {
     marginLeft: 41,
@@ -16,14 +16,35 @@ const useStyles = makeStyles(() => ({
     display: "flex",
     flexDirection: "column",
     flexGrow: 1,
-    justifyContent: "space-between"
-  }
+    justifyContent: "space-between",
+  },
 }));
 
 const ActiveChat = (props) => {
   const classes = useStyles();
-  const { user } = props;
-  const conversation = props.conversation || {};
+  const { user, activeConversation, updateMessages } = props;
+
+  const conversation = useMemo(
+    () => props.conversation || {},
+    [props.conversation],
+  );
+
+  useEffect(() => {
+    if (activeConversation === conversation.otherUser?.username) {
+      const conversationLength = conversation.messages.length;
+      const { unreadMessages } = conversation;
+      const messagesToUpdate = conversation.messages
+        .slice(conversationLength - unreadMessages, conversation.length)
+        .reduce((messages, message) => {
+          messages.push(message.id);
+          return messages;
+        }, []);
+
+      if (messagesToUpdate.length) {
+        updateMessages(conversation.id, messagesToUpdate);
+      }
+    }
+  }, [activeConversation, conversation, updateMessages]);
 
   return (
     <Box className={classes.root}>
@@ -57,9 +78,19 @@ const mapStateToProps = (state) => {
     conversation:
       state.conversations &&
       state.conversations.find(
-        (conversation) => conversation.otherUser.username === state.activeConversation
-      )
+        (conversation) =>
+          conversation.otherUser.username === state.activeConversation,
+      ),
+    activeConversation: state.activeConversation,
   };
 };
 
-export default connect(mapStateToProps, null)(ActiveChat);
+const mapDispatchToProps = (dispatch) => {
+  return {
+    updateMessages: (conversationId, messages) => {
+      dispatch(updateMessages(conversationId, messages));
+    },
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(ActiveChat);
