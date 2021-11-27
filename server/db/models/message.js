@@ -1,4 +1,5 @@
 const Sequelize = require("sequelize");
+const { Op } = Sequelize;
 const db = require("../db");
 
 const Message = db.define("message", {
@@ -10,11 +11,30 @@ const Message = db.define("message", {
     type: Sequelize.INTEGER,
     allowNull: false,
   },
-  seen: {
+  read: {
     type: Sequelize.BOOLEAN,
     allowNull: false,
     defaultValue: false,
   },
 });
 
+/**
+ * Sets the read status of messages to true
+ *
+ * @param {number[]} messages - an array of message id's to update
+ */
+Message.updateReadStatus = function (messages) {
+  Message.update(
+    {
+      read: true,
+    },
+    {
+      where: {
+        id: {
+          [Op.in]: messages,
+        },
+      },
+    },
+  );
+};
 module.exports = Message;

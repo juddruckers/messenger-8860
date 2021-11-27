@@ -45,4 +45,19 @@ router.post("/", async (req, res, next) => {
   }
 });
 
+/// expects [messageId-1, messageId-2, ...] in response body
+router.put("/", (req, res, next) => {
+  try {
+    if (!req.user) {
+      return res.sendStatus(401);
+    }
+
+    Message.updateReadStatus(req.body);
+
+    res.status(204).end();
+  } catch (error) {
+    next(error);
+  }
+});
+
 module.exports = router;

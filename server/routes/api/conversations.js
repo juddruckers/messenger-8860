@@ -73,7 +73,7 @@ router.get("/", async (req, res, next) => {
       // set properties for notification count and latest message preview
       convoJSON.unreadMessages = convoJSON.messages.reduce(
         (unreadMessages, message) => {
-          if (message.senderId !== userId && !message.seen) {
+          if (message.senderId !== userId && !message.read) {
             unreadMessages++;
           }
           return unreadMessages;
