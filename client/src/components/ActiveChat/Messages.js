@@ -14,19 +14,15 @@ const useStyles = makeStyles(() => ({
 const Messages = (props) => {
   const classes = useStyles();
   const { messages, otherUser, userId } = props;
-  const messagesHaveBeenRead = messages
-    .filter((message) => message.senderId === userId)
-    .every((message) => message.read);
 
   return (
     <Box>
       {messages.map((message, index) => {
         const time = moment(message.createdAt).format("h:mm");
-
         return message.senderId === userId ? (
           <>
             <SenderBubble key={message.id} text={message.text} time={time} />
-            {messagesHaveBeenRead && index === messages.length - 1 && (
+            {index === messages.length - 1 && message.read && (
               <Box className={classes.avatarBox}>
                 <Avatar
                   readVersion={true}
