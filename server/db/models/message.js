@@ -21,18 +21,16 @@ const Message = db.define("message", {
 /**
  * Sets the read status of messages to true
  *
- * @param {number[]} messages - an array of message id's to update
+ * @param {number} conversationId
  */
-Message.updateReadStatus = function (messages) {
+Message.updateReadStatus = function (conversationId) {
   Message.update(
     {
       read: true,
     },
     {
       where: {
-        id: {
-          [Op.in]: messages,
-        },
+        conversationId: conversationId,
       },
     },
   );

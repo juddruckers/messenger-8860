@@ -30,19 +30,11 @@ const ActiveChat = (props) => {
   );
 
   useEffect(() => {
-    if (activeConversation === conversation.otherUser?.username) {
-      const conversationLength = conversation.messages.length;
-      const { unreadMessages } = conversation;
-      const messagesToUpdate = conversation.messages
-        .slice(conversationLength - unreadMessages, conversation.length)
-        .reduce((messages, message) => {
-          messages.push(message.id);
-          return messages;
-        }, []);
-
-      if (messagesToUpdate.length) {
-        updateMessages(conversation.id, messagesToUpdate);
-      }
+    if (
+      activeConversation === conversation.otherUser?.username &&
+      conversation.unreadMessages
+    ) {
+      updateMessages(conversation.id);
     }
   }, [activeConversation, conversation, updateMessages]);
 

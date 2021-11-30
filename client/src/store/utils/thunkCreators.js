@@ -116,7 +116,7 @@ export const postMessage = (body) => async (dispatch) => {
 export const updateMessages =
   (conversationId, messages) => async (dispatch) => {
     try {
-      updateMessageReadStatus(messages);
+      updateMessageReadStatus({ conversationId });
       dispatch(clearUnreadMessages(conversationId));
     } catch (error) {
       console.error(error);
