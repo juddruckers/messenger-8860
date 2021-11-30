@@ -23,7 +23,7 @@ const useStyles = makeStyles((theme) => ({
       height: "90px",
     },
     "& h4": {
-      color: "white",
+      color: theme.palette.white,
     },
   },
 }));

@@ -28,12 +28,12 @@ const useStyles = makeStyles((theme) => ({
       marginLeft: "1rem",
       minWidth: "200px",
       padding: theme.button.padding,
-      backgroundColor: "white",
+      backgroundColor: theme.palette.white,
       color: theme.palette.primary.main,
     },
     "& button:hover": {
       backgroundColor: theme.palette.primary.main,
-      color: "white",
+      color: theme.palette.white,
     },
     "& p": {
       color: theme.palette.gray,

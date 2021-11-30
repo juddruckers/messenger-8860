@@ -19,5 +19,6 @@ export const theme = createTheme({
     primary: { main: "#3A8DFF", focused: "#0061e6" },
     secondary: { main: "#B0B0B0" },
     gray: "rgb(176, 176, 176)",
+    white: "#FFFFFF",
   },
 });

@@ -32,7 +32,7 @@ const useStyles = makeStyles((theme) => ({
     marginTop: "2.5rem",
     "& button": {
       backgroundColor: theme.palette.primary.main,
-      color: "white",
+      color: theme.palette.white,
       boxShadow: "none",
       minWidth: "150px",
       padding: theme.button.padding,
