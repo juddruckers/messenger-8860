@@ -13,7 +13,7 @@ const useStyles = makeStyles(() => ({
 
 const Messages = (props) => {
   const classes = useStyles();
-  const { messages, otherUser, userId } = props;
+  const { messages, otherUser, userId, lastReadMessageIndex } = props;
 
   return (
     <Box>
@@ -22,7 +22,7 @@ const Messages = (props) => {
         return message.senderId === userId ? (
           <>
             <SenderBubble key={message.id} text={message.text} time={time} />
-            {index === messages.length - 1 && message.read && (
+            {index === lastReadMessageIndex && (
               <Box className={classes.avatarBox}>
                 <Avatar
                   readVersion={true}
