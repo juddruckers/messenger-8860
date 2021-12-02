@@ -56,9 +56,9 @@ router.put("/", async (req, res, next) => {
         id: conversationId,
       },
     });
-    const { user1Id, user2Id } = conversation.dataValues;
 
-    if (user1Id !== userId || user2Id !== userId) {
+    const { user1Id, user2Id } = conversation.dataValues;
+    if (user1Id !== userId && user2Id !== userId) {
       return res.sendStatus(403);
     }
 
