@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { Route, Switch, withRouter } from "react-router-dom";
+import { Route, Switch, withRouter, Redirect } from "react-router-dom";
 import { connect } from "react-redux";
 import { fetchUser } from "./store/utils/thunkCreators";
-import Signup from "./Signup.js";
-import Login from "./Login.js";
+import { Authentication } from "./components/Auth";
 import { Home, SnackbarError } from "./components";
 
 const Routes = (props) => {
@@ -41,12 +40,30 @@ const Routes = (props) => {
         />
       )}
       <Switch>
-        <Route path="/login" component={Login} />
-        <Route path="/register" component={Signup} />
+        <Route path="/login">
+          <Authentication
+            formMessage="Welcome back!"
+            shouldShowLogin={true}
+            submitButtonText="Login"
+            toggleHelpText="Don't have an account?"
+            toggleButtonText="Create an account"
+          />
+        </Route>
+        <Route path="/register">
+          <Authentication
+            formMessage="Create an account."
+            shouldShowLogin={false}
+            submitButtonText="Create"
+            toggleHelpText="Already have an account?"
+            toggleButtonText="Login"
+          />
+        </Route>
         <Route
           exact
           path="/"
-          render={(props) => (props.user?.id ? <Home /> : <Signup />)}
+          render={(props) =>
+            props.user?.id ? <Home /> : <Redirect to="/login" />
+          }
         />
         <Route path="/home" component={Home} />
       </Switch>

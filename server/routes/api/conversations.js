@@ -11,7 +11,6 @@ router.get("/", async (req, res, next) => {
       return res.sendStatus(401);
     }
     const userId = req.user.id;
-
     const conversations = await Conversation.findAll({
       where: {
         [Op.or]: {
@@ -54,8 +53,8 @@ router.get("/", async (req, res, next) => {
     for (let i = 0; i < conversations.length; i++) {
       const convo = conversations[i];
       const convoJSON = convo.toJSON();
+      const { messages } = convoJSON;
       const latestMessage = convoJSON.messages[convoJSON.messages.length - 1];
-
       // set a property "otherUser" so that frontend will have easier access
       if (convoJSON.user1) {
         convoJSON.otherUser = convoJSON.user1;
@@ -73,6 +72,24 @@ router.get("/", async (req, res, next) => {
       }
 
       // set properties for notification count and latest message preview
+      convoJSON.unreadMessages = messages.reduce((unreadMessages, message) => {
+        if (message.senderId !== userId && !message.read) {
+          unreadMessages++;
+        }
+        return unreadMessages;
+      }, 0);
+
+      //find the last message that was read by the otherUser
+
+      for (let i = messages.length - 1; i >= 0; i--) {
+        const message = messages[i];
+
+        if (message.senderId === userId && message.read) {
+          convoJSON.lastReadMessageIndex = i;
+          break;
+        }
+      }
+
       convoJSON.latestMessageText = latestMessage.text;
       conversations[i] = convoJSON;
     }
